@@ -16,7 +16,7 @@
             </f:entry>
 
             <f:entry title="${%Plot title}" field="title" help="/plugin/plot/help-title.html">
-                <f:textbox name="title" value="${plot.title}"/>
+                <f:textbox name="title" value="${plot.title}" clazz="required"/>
             </f:entry>
 
             <f:entry title="${%Plot description}" help="/plugin/plot/help-description.html">
