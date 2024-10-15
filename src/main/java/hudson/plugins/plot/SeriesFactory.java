@@ -39,8 +39,6 @@ public class SeriesFactory {
             typeClass = PropertiesSeries.class;
         } else if ("csv".equals(type)) {
             typeClass = CSVSeries.class;
-        } else if ("xml".equals(type)) {
-            typeClass = XMLSeries.class;
         }
 
         return typeClass != null ? req.bindJSON(typeClass, formData) : null;

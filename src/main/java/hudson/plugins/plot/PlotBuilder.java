@@ -1,5 +1,18 @@
 package hudson.plugins.plot;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.ServletException;
+
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
@@ -12,18 +25,8 @@ import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import javax.servlet.ServletException;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Plot {@link Builder} class for pipeline.
@@ -68,8 +71,6 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
     public List<CSVSeries> csvSeries;
     @SuppressWarnings("visibilitymodifier")
     public List<PropertiesSeries> propertiesSeries;
-    @SuppressWarnings("visibilitymodifier")
-    public List<XMLSeries> xmlSeries;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     // Similarly, any optional @DataBoundSetter properties must match
@@ -198,15 +199,6 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
         this.propertiesSeries = propertiesSeries;
     }
 
-    public List<XMLSeries> getXmlSeries() {
-        return xmlSeries;
-    }
-
-    @DataBoundSetter
-    public void setXmlSeries(List<XMLSeries> xmlSeries) {
-        this.xmlSeries = xmlSeries;
-    }
-
     @Override
     public void perform(@NonNull Run<?, ?> build, @NonNull FilePath workspace,
                         @NonNull Launcher launcher, @NonNull TaskListener listener) {
@@ -218,9 +210,6 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
         List<Series> series = new ArrayList<>();
         if (csvSeries != null) {
             series.addAll(csvSeries);
-        }
-        if (xmlSeries != null) {
-            series.addAll(xmlSeries);
         }
         if (propertiesSeries != null) {
             series.addAll(propertiesSeries);

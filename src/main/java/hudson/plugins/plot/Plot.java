@@ -352,16 +352,6 @@ public class Plot implements Comparable<Plot> {
         this.description = description;
     }
 
-    /**
-     * @deprecated Kept for backward compatibility.
-     */
-    @Deprecated
-    public Plot(String title, String yaxis, String group, String numBuilds,
-                String csvFileName, String style, boolean useDescr) {
-        this(title, yaxis, group, numBuilds, csvFileName, style, useDescr,
-                false, false, false, null, null, null);
-    }
-
     // needed for serialization
     public Plot() {
     }
@@ -392,19 +382,6 @@ public class Plot implements Comparable<Plot> {
 
     public Double getYaxisMaximum() {
         return getDoubleFromString(yaxisMaximum);
-    }
-
-    public Double getDoubleFromString(String input) {
-        Double result = null;
-        if (!StringUtils.isEmpty(input)) {
-            try {
-                result = Double.parseDouble(input);
-            } catch (NumberFormatException nfe) {
-                LOGGER.log(Level.INFO, "Failed to parse Double value from String."
-                        + " Not a problem, result already set", nfe);
-            }
-        }
-        return result;
     }
 
     public int compareTo(Plot o) {
@@ -454,6 +431,19 @@ public class Plot implements Comparable<Plot> {
             }
         }
         return csvFileName;
+    }
+
+    private Double getDoubleFromString(String input) {
+        Double result = null;
+        if (!StringUtils.isEmpty(input)) {
+            try {
+                result = Double.parseDouble(input);
+            } catch (NumberFormatException nfe) {
+                LOGGER.log(Level.INFO, "Failed to parse Double value from String."
+                        + " Not a problem, result already set", nfe);
+            }
+        }
+        return result;
     }
 
     /**
