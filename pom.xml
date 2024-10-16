@@ -28,9 +28,8 @@
 
   <artifactId>plot</artifactId>
   <packaging>hpi</packaging>
-  <name>Plot plugin</name>
-  <version>2.1.12</version>
-  <url>https://github.com/jenkinsci/plot-plugin</url>
+  <name>Plot plugin for tests</name>
+  <version>2.1.12-nic</version>
 
   <developers>
     <developer>
