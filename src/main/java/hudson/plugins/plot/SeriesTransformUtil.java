@@ -1,9 +1,3 @@
-/*
- * Copyright (c) 2008-2009 Yahoo! Inc.  All rights reserved.
- * The copyrights to the contents of this file are licensed under the MIT License
- * (http://www.opensource.org/licenses/mit-license.php)
- */
-
 package hudson.plugins.plot;
 
 import java.util.ArrayList;
@@ -15,30 +9,26 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
- * This class creates a Series class based on the data source
+ * This class creates a Series class from request
  *
  * @author areese, Alan.Harder@sun.com
  */
-public class SeriesFactory {
-
-    private SeriesFactory() {
+public class SeriesTransformUtil {
+    private SeriesTransformUtil() {
     }
 
     /**
-     * Using file and label and the Stapler request, create a TestStatisticsSeries
+     * Using file and label and the Stapler request, create a subclass of series
+     * that can process the type selected.
      *
      * @param formData JSON data for series
      */
     public static Series createSeries(JSONObject formData, StaplerRequest req) {
-        String file = formData.getString("file");
-        formData = formData.getJSONObject("fileType");
-        formData.put("file", file);
-        String type = formData.getString("value");
-        Class<? extends Series> typeClass = null;
+        final String[] filenamePatterns = (String[])formData
+            .getJSONArray("filenamePatterns")
+            .toArray(new String[0]);
 
-        // create series
-
-        return typeClass != null ? req.bindJSON(typeClass, formData) : null;
+        return new TestStatisticsSeries(filenamePatterns);
     }
 
     public static List<Series> createSeriesList(Object data, StaplerRequest req) {

@@ -10,14 +10,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.kohsuke.stapler.StaplerRequest;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-import hudson.Extension;
 import hudson.FilePath;
-import hudson.model.AbstractDescribableImpl;
-import hudson.model.Descriptor;
-import net.sf.json.JSONObject;
 
 /**
  * Represents a plot data series configuration.
@@ -25,16 +18,10 @@ import net.sf.json.JSONObject;
  * @author Nigel Daley
  * @author Allen Reese
  */
-public abstract class Series extends AbstractDescribableImpl<Series> {
-    private static final transient Pattern PAT_NAME = Pattern.compile("%name%");
-    private static final transient Pattern PAT_INDEX = Pattern.compile("%index%");
+public abstract class Series {
+    private static final Pattern PAT_NAME = Pattern.compile("%name%");
+    private static final Pattern PAT_INDEX = Pattern.compile("%index%");
     private static final Pattern PAT_BUILD_NUMBER = Pattern.compile("%build%");
-
-    /**
-     * Relative path to the data series property file. Mandatory.
-     */
-    @SuppressWarnings("visibilitymodifier")
-    protected String file;
 
     /**
      * Data series legend label. Optional.
@@ -42,19 +29,17 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
     @SuppressWarnings("visibilitymodifier")
     protected String label;
 
+    protected String[] filenamePatterns;
 
-    protected Series(String file, String label) {
-        this.file = file;
+
+    protected Series(String label, String ...filenamePatterns) {
+        this.filenamePatterns = filenamePatterns;
 
         if (label == null) {
             label = Messages.Plot_Missing();
         }
 
         this.label = label;
-    }
-
-    public String getFile() {
-        return file;
     }
 
     public String getLabel() {
@@ -117,24 +102,5 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
         }
 
         return resultUrl;
-    }
-
-    @Override
-    public Descriptor<Series> getDescriptor() {
-        return new DescriptorImpl();
-    }
-
-    @Extension
-    public static class DescriptorImpl extends Descriptor<Series> {
-        @NonNull
-        public String getDisplayName() {
-            return Messages.Plot_Series();
-        }
-
-        @Override
-        public Series newInstance(StaplerRequest req, @NonNull JSONObject formData)
-                throws FormException {
-            return SeriesFactory.createSeries(formData, req);
-        }
     }
 }

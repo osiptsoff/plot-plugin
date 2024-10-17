@@ -1,11 +1,9 @@
 package hudson.plugins.plot;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
-import javax.servlet.ServletException;
 
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -44,7 +42,6 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
     // Required fields
     private final String group;
     private final String style;
-    private final String title;
 
     @CheckForNull
     private String description;
@@ -60,23 +57,17 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
     private boolean exclZero;
     private boolean logarithmic;
     private boolean keepRecords;
+    private String csvFileName;
 
-    // Generated?
-    @SuppressWarnings("visibilitymodifier")
-    public String csvFileName;
-    /**
-     * List of data series.
-     */
-    // here be series
+    private Series series;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     // Similarly, any optional @DataBoundSetter properties must match
     @DataBoundConstructor
-    public PlotBuilder(String group, String style, String csvFileName, String title) {
+    public PlotBuilder(String group, String style, String csvFileName) {
         this.group = group;
         this.style = style;
         this.csvFileName = csvFileName;
-        this.title = title;
     }
 
     public String getGroup() {
@@ -85,11 +76,6 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
 
     public String getStyle() {
         return style;
-    }
-
-    @CheckForNull
-    public String getTitle() {
-        return title;
     }
 
     @CheckForNull
@@ -178,19 +164,30 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
         this.description = Util.fixEmptyAndTrim(description);
     }
 
+    public Series getSeries() {
+        return this.series;
+    }
+
+    @DataBoundSetter
+    public void setSeries(Series series) {
+        this.series = series;
+    }
+
     @Override
     public void perform(@NonNull Run<?, ?> build, @NonNull FilePath workspace,
                         @NonNull Launcher launcher, @NonNull TaskListener listener) {
         List<Plot> plots = new ArrayList<>();
-        Plot plot = new Plot(title, yaxis, group, numBuilds, csvFileName, style,
+        // TODO: name of platform as title
+        Plot plot = new Plot("stubber", yaxis, group, numBuilds, csvFileName, style,
                 useDescr, keepRecords, exclZero, logarithmic,
                 yaxisMinimum, yaxisMaximum, description);
 
-        List<Series> series = new ArrayList<>();
-        
-        // add series
+        if(this.series == null) {
+            plot.series = Collections.emptyList();
+        } else {
+            plot.series = Collections.singletonList(series);
+        }
 
-        plot.series = series;
         plot.addBuild(build, listener.getLogger(), workspace);
         plots.add(plot);
         PlotBuildAction buildAction = build.getAction(PlotBuildAction.class);
@@ -235,8 +232,7 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
             return "plot-" + UUID.randomUUID().toString() + ".csv";
         }
 
-        public FormValidation doCheckName(@QueryParameter String value)
-                throws IOException, ServletException {
+        public FormValidation doCheckName(@QueryParameter String value) {
             if (value == null || value.isEmpty()) {
                 return FormValidation.error("Please set a group");
             }
@@ -255,6 +251,7 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
          * This human readable group is used in the configuration screen.
          */
         @NonNull
+        @Override
         public String getDisplayName() {
             return Messages.Plot_Publisher_DisplayName();
         }

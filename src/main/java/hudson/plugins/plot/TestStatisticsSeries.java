@@ -28,16 +28,12 @@ public class TestStatisticsSeries extends Series {
     private static final Logger LOGGER = LogManager.getLogger(TestStatisticsSeries.class);
     private static final String URL = "test-statistics";
 
-    private final String[] filenamePatterns;
     private final TestStatisticsParserChain parserChain = new TestStatisticsParserChain()
         .add(new SurefireTxtReportParser());
 
     @DataBoundConstructor
     public TestStatisticsSeries(String ...filenamePatterns) {
-        // i did not find any uses of file in parent anyway
-        super("stub", "");
-
-        this.filenamePatterns = filenamePatterns;
+        super("Build's test statistics", filenamePatterns);
     }
 
     @Override

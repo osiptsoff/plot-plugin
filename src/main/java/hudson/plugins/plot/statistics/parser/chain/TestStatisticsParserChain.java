@@ -38,7 +38,7 @@ public final class TestStatisticsParserChain {
      * {@code null} otherwise
      */
     public TestStatistics parse(Path path) {
-        if(parsers.isEmpty()) {
+        if (parsers.isEmpty()) {
             throw new IllegalStateException("Using unconfigured parser chain");
         }
 

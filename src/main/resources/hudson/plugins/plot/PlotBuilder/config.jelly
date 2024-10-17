@@ -70,13 +70,7 @@
                 <f:textbox name="yaxisMaximum" value="${plot.yaxisMaximum}"/>
             </f:entry>
             <f:entry title="" description="${%A new data series definition}">
-                <f:repeatableProperty field="csvSeries" add="Add CSV series"/>
-            </f:entry>
-            <f:entry title="" description="${%A new data series definition}">
-                <f:repeatableProperty field="propertiesSeries" add="Add properties series"/>
-            </f:entry>
-            <f:entry title="" description="${%A new data series definition}">
-                <f:repeatableProperty field="xmlSeries" add="Add XML series"/>
+                <f:property field="series"/>
             </f:entry>
 
         </p:blockWrapper>
