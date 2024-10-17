@@ -135,8 +135,8 @@ public class PlotReport {
             return tableData;
         }
 
-        try (final CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(plotFile),
-                Charset.defaultCharset().name()))) {
+        try (final CSVReader reader = new CSVReader(new InputStreamReader(
+                new FileInputStream(plotFile), Charset.defaultCharset().name()))) {
             // throw away 2 header lines
             reader.readNext();
             reader.readNext();

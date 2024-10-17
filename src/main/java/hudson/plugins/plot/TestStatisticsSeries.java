@@ -21,7 +21,7 @@ import hudson.plugins.plot.statistics.parser.chain.TestStatisticsParserChain;
 /**
  * Used for loading and combining all test statistics
  * across workspace.
- * 
+ *
  * @author Nikita Osiptsov
  */
 public class TestStatisticsSeries extends Series {
@@ -32,22 +32,23 @@ public class TestStatisticsSeries extends Series {
         .add(new SurefireTxtReportParser());
 
     @DataBoundConstructor
-    public TestStatisticsSeries(String ...filenamePatterns) {
+    public TestStatisticsSeries(String... filenamePatterns) {
         super("Build's test statistics", filenamePatterns);
     }
 
     @Override
-    public List<PlotPoint> loadSeries(FilePath workspaceRootDir, int buildNumber, PrintStream logger) {
+    public List<PlotPoint> loadSeries(FilePath workspaceRootDir,
+            int buildNumber, PrintStream logger) {
         final FileFinder fileFinder = new FileFinder(workspaceRootDir);
 
         final Path[] matchingPaths = fileFinder.findFiles(filenamePatterns);
 
-        if(matchingPaths.length == 0) {
+        if (matchingPaths.length == 0) {
             logNoFilesFound(fileFinder.getBaseDir());
 
             return Collections.emptyList();
         }
-        
+
         final List<PlotPoint> points =  Arrays.asList(matchingPaths).stream()
             .map(this::parseAndLogFail)
             .filter(Objects::nonNull)
@@ -58,7 +59,7 @@ public class TestStatisticsSeries extends Series {
             ).getResult().toPlotPoints();
 
         // the only purpose here is to assing url
-        for(int i = 0; i < points.size(); i++) {
+        for (int i = 0; i < points.size(); i++) {
             final PlotPoint plotPoint = points.get(i);
 
             plotPoint.setUrl(getUrl(URL, plotPoint.getLabel(), i, buildNumber));
@@ -70,7 +71,7 @@ public class TestStatisticsSeries extends Series {
     private TestStatistics parseAndLogFail(Path path) {
         final TestStatistics statistics = parserChain.parse(path);
 
-        if(statistics == null) {
+        if (statistics == null) {
             LOGGER.warn(String.format("Failed to parse file '%s'", path.toString()));
         }
 
@@ -80,7 +81,7 @@ public class TestStatisticsSeries extends Series {
     private void logNoFilesFound(Path searchBaseDir) {
         final String errorMessage =
             "For patterns [%s] no matching files were found in fs tree with root '%s'.";
-        
+
         final StringJoiner joiner = new StringJoiner(", ");
         for (final String pattern: filenamePatterns) {
             joiner.add(String.format("'%s'", pattern));
@@ -88,5 +89,4 @@ public class TestStatisticsSeries extends Series {
 
         LOGGER.warn(String.format(errorMessage, joiner.toString(), searchBaseDir.toString()));
     }
-    
 }

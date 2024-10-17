@@ -7,7 +7,7 @@ import hudson.plugins.plot.PlotPoint;
 
 /**
  * Represents the general statistics of tests.
- * 
+ *
  * @author Nikita Osiptsov
  */
 public class TestStatistics {
@@ -54,11 +54,11 @@ public class TestStatistics {
     public Integer getFailed() {
         return this.failed;
     }
-    
+
     /**
      * Converts test statistics to list of plot points, one
      * point per test state.
-     * 
+     *
      * @return list of four (passed, skipped, errors, failed) plot points
      */
     public List<PlotPoint> toPlotPoints() {

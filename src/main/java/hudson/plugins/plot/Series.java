@@ -28,11 +28,10 @@ public abstract class Series {
      */
     @SuppressWarnings("visibilitymodifier")
     protected String label;
-
+    @SuppressWarnings("visibilitymodifier")
     protected String[] filenamePatterns;
 
-
-    protected Series(String label, String ...filenamePatterns) {
+    protected Series(String label, String... filenamePatterns) {
         this.filenamePatterns = filenamePatterns;
 
         if (label == null) {

@@ -182,7 +182,7 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
                 useDescr, keepRecords, exclZero, logarithmic,
                 yaxisMinimum, yaxisMaximum, description);
 
-        if(this.series == null) {
+        if (this.series == null) {
             plot.series = Collections.emptyList();
         } else {
             plot.series = Collections.singletonList(series);

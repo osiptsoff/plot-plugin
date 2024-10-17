@@ -24,7 +24,7 @@ public class SeriesTransformUtil {
      * @param formData JSON data for series
      */
     public static Series createSeries(JSONObject formData, StaplerRequest req) {
-        final String[] filenamePatterns = (String[])formData
+        final String[] filenamePatterns = (String[]) formData
             .getJSONArray("filenamePatterns")
             .toArray(new String[0]);
 

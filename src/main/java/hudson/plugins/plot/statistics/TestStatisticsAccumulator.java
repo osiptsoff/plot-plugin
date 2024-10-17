@@ -2,18 +2,18 @@ package hudson.plugins.plot.statistics;
 
 /**
  * Gathers {@link TestStatistics} to resulting instance.
- * 
+ *
  * @author Nikita Osiptsov
  */
 public class TestStatisticsAccumulator {
-    protected Integer passed = 0;
-    protected Integer skipped = 0;
-    protected Integer errors = 0;
-    protected Integer failed = 0;
+    private Integer passed = 0;
+    private Integer skipped = 0;
+    private Integer errors = 0;
+    private Integer failed = 0;
 
     /**
      * Adds the fields of the accepted instance to the total sum of each field.
-     * 
+     *
      * @param testStatistics added instance
      * @return this instance for chaining
      */

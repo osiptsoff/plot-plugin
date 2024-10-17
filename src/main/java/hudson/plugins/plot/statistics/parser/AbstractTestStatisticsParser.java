@@ -8,20 +8,20 @@ import hudson.plugins.plot.statistics.TestStatistics;
 
 /**
  * Parses {@link TestStatistics} from given file.
- * 
+ *
  * @author Nikita Osiptsov
  */
 public abstract class AbstractTestStatisticsParser {
     /**
      * Parses test statistics from given file.
-     * 
+     *
      * @param filePath path to file containing test statistics
      * @return statistics from given file
      * @throws ParseException if file cannot be parsed with this parser or
      * error occured while parsing
      */
     public final TestStatistics parse(Path filePath) throws ParseException {
-        if(!isPathAcceptable(filePath)) {
+        if (!isPathAcceptable(filePath)) {
             throw new ParseException("File cannot be parsed with this parser.", 0);
         }
 
@@ -30,7 +30,7 @@ public abstract class AbstractTestStatisticsParser {
 
     /**
      * Finds out if file can be parsed with this parser.
-     * 
+     *
      * @param filePath path to file
      * @return {@code true} if file can be parsed, {@code false} otherwise
      */
@@ -43,7 +43,7 @@ public abstract class AbstractTestStatisticsParser {
     }
     /**
      * Parses statistics from given file.
-     * 
+     *
      * @param filePath path to file
      * @return parsed statistics
      * @throws ParseException if error occured while parsing
@@ -53,7 +53,7 @@ public abstract class AbstractTestStatisticsParser {
     /**
      * Note: pattern must be of {@code glob} syntax
      * (see {@link java.nio.file.FileSystem}'s getPathMatcher()).
-     * 
+     *
      * @return pattern of acceptable path
      */
     protected abstract String getPattern();

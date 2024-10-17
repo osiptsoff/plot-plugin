@@ -18,12 +18,12 @@ import hudson.plugins.plot.statistics.TestStatistics;
 /**
  * Parses test statistics from maven surefire .txt report, e.g, from file
  * with contents like: <p>
- * 
+ *
  * --------------------------------------------------------     <p>
  * Test set: foo.bar.bazTest                                    <p>
  * ---------------------------------------------------------    <p>
  * Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.1 s - in foo.bar.bazTest.
- * 
+ *
  * @author Nikita Osiptsov
  */
 public class SurefireTxtReportParser extends AbstractTestStatisticsParser {
@@ -35,13 +35,13 @@ public class SurefireTxtReportParser extends AbstractTestStatisticsParser {
 
     @Override
     protected TestStatistics doParse(Path filePath) throws ParseException {
-        try(final Stream<String> lines = Files.lines(filePath)) {
+        try (final Stream<String> lines = Files.lines(filePath)) {
             final Optional<TestStatistics> statistics = lines
                 .map(this::parseFromLine)
                 .filter(Objects::nonNull)
                 .findFirst();
 
-            if(!statistics.isPresent()) {
+            if (!statistics.isPresent()) {
                 throw new ParseException("File contains no test statistics", 0);
             }
 
@@ -64,12 +64,12 @@ public class SurefireTxtReportParser extends AbstractTestStatisticsParser {
         final Map<String, Integer> statisticsMap = new HashMap<>();
         final String lowercaseLine = line.toLowerCase();
 
-        for(String marker: Arrays.asList(PASSED_MARKER, ERRORS_MARKER,
+        for (String marker: Arrays.asList(PASSED_MARKER, ERRORS_MARKER,
                 FAILURES_MARKER, SKIPPED_MARKER)) {
             final String markerPatternString = String.format(patternString, marker);
             final Matcher matcher = Pattern.compile(markerPatternString).matcher(lowercaseLine);
 
-            if(!matcher.find()) {
+            if (!matcher.find()) {
                 return null;
             }
 
@@ -83,5 +83,4 @@ public class SurefireTxtReportParser extends AbstractTestStatisticsParser {
             statisticsMap.get(FAILURES_MARKER)
         );
     }
-    
 }

@@ -11,7 +11,7 @@ import hudson.plugins.plot.statistics.parser.AbstractTestStatisticsParser;
 
 /**
  * Chain of responsibility for parsers.
- * 
+ *
  * @author Nikita Osiptsov
  */
 public final class TestStatisticsParserChain {
@@ -19,7 +19,7 @@ public final class TestStatisticsParserChain {
 
     /**
      * Adds new parser to the end of chain.
-     * 
+     *
      * @param parser new parser
      * @return this instance for chaining
      */
@@ -31,8 +31,8 @@ public final class TestStatisticsParserChain {
 
     /**
      * Makes first of chain's parsers which can process given file
-     * parse test statistics from it. 
-     * 
+     * parse test statistics from it.
+     *
      * @param path path to file
      * @return {@link TestStatistics} if chain was able to process given file,
      * {@code null} otherwise
@@ -42,7 +42,7 @@ public final class TestStatisticsParserChain {
             throw new IllegalStateException("Using unconfigured parser chain");
         }
 
-        for(final AbstractTestStatisticsParser parser: parsers) {
+        for (final AbstractTestStatisticsParser parser: parsers) {
             try {
                 return parser.parse(path);
             } catch (ParseException pe) {

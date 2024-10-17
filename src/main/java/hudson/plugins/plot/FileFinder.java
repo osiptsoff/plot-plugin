@@ -13,7 +13,7 @@ import hudson.FilePath;
 
 /**
  * Searches base directory for all required files on local machine.
- * 
+ *
  * @author Nikita Osiptsov
  */
 public class FileFinder {
@@ -21,7 +21,7 @@ public class FileFinder {
 
     /**
      * Creates instance with given base directory.
-     * 
+     *
      * @param baseDir base directory
      */
     public FileFinder(Path baseDir) {
@@ -32,7 +32,7 @@ public class FileFinder {
 
     /**
      * Creates instance with given base directory.
-     * 
+     *
      * @param baseDir base directory
      */
     public FileFinder(FilePath baseDir) {
@@ -41,7 +41,7 @@ public class FileFinder {
         final String baseDirPathString = baseDir.getRemote();
         final String fsSeparator = FileSystems.getDefault().getSeparator();
         final String[] splitPath = baseDirPathString.split(fsSeparator);
-        
+
         this.baseDir = Paths.get(splitPath[0],
             Arrays.copyOfRange(splitPath, 1, splitPath.length));
     }
@@ -49,7 +49,7 @@ public class FileFinder {
     /**
      * Searches local base directory for all files matching any of
      * given patterns. Note: patterns are expected to use {@code glob} path syntax.
-     * 
+     *
      * @param filenamePatterns path patterns
      * @return array of found paths; may be empty if found none
      * or failed to open base directory
@@ -72,13 +72,13 @@ public class FileFinder {
         return baseDir;
     }
 
-    private boolean matchesOne(Path path, String ...filenamePatterns) {
-        for(final String pattern: filenamePatterns) {
+    private boolean matchesOne(Path path, String... filenamePatterns) {
+        for (final String pattern: filenamePatterns) {
             final boolean matches = FileSystems.getDefault()
                 .getPathMatcher(String.format("glob:%s", pattern))
                 .matches(path);
 
-            if(matches) {
+            if (matches) {
                 return true;
             }
         }
