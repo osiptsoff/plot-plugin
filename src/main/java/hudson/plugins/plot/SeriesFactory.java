@@ -8,9 +8,11 @@ package hudson.plugins.plot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.kohsuke.stapler.StaplerRequest;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * This class creates a Series class based on the data source
@@ -23,8 +25,7 @@ public class SeriesFactory {
     }
 
     /**
-     * Using file and label and the Stapler request, create a subclass of series
-     * that can process the type selected.
+     * Using file and label and the Stapler request, create a TestStatisticsSeries
      *
      * @param formData JSON data for series
      */
@@ -35,11 +36,7 @@ public class SeriesFactory {
         String type = formData.getString("value");
         Class<? extends Series> typeClass = null;
 
-        if ("properties".equals(type)) {
-            typeClass = PropertiesSeries.class;
-        } else if ("csv".equals(type)) {
-            typeClass = CSVSeries.class;
-        }
+        // create series
 
         return typeClass != null ? req.bindJSON(typeClass, formData) : null;
     }

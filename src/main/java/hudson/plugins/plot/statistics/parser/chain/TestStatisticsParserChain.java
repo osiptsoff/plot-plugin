@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import hudson.plugins.plot.statistics.TestStatistics;
 import hudson.plugins.plot.statistics.parser.AbstractTestStatisticsParser;
@@ -23,7 +24,7 @@ public final class TestStatisticsParserChain {
      * @return this instance for chaining
      */
     public TestStatisticsParserChain add(AbstractTestStatisticsParser parser) {
-        parsers.add(parser);
+        parsers.add(Objects.requireNonNull(parser));
 
         return this;
     }

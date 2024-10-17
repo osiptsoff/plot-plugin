@@ -67,10 +67,7 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
     /**
      * List of data series.
      */
-    @SuppressWarnings("visibilitymodifier")
-    public List<CSVSeries> csvSeries;
-    @SuppressWarnings("visibilitymodifier")
-    public List<PropertiesSeries> propertiesSeries;
+    // here be series
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     // Similarly, any optional @DataBoundSetter properties must match
@@ -181,24 +178,6 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
         this.description = Util.fixEmptyAndTrim(description);
     }
 
-    public List<CSVSeries> getCsvSeries() {
-        return csvSeries;
-    }
-
-    @DataBoundSetter
-    public void setCsvSeries(List<CSVSeries> csvSeries) {
-        this.csvSeries = csvSeries;
-    }
-
-    public List<PropertiesSeries> getPropertiesSeries() {
-        return propertiesSeries;
-    }
-
-    @DataBoundSetter
-    public void setPropertiesSeries(List<PropertiesSeries> propertiesSeries) {
-        this.propertiesSeries = propertiesSeries;
-    }
-
     @Override
     public void perform(@NonNull Run<?, ?> build, @NonNull FilePath workspace,
                         @NonNull Launcher launcher, @NonNull TaskListener listener) {
@@ -208,12 +187,8 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
                 yaxisMinimum, yaxisMaximum, description);
 
         List<Series> series = new ArrayList<>();
-        if (csvSeries != null) {
-            series.addAll(csvSeries);
-        }
-        if (propertiesSeries != null) {
-            series.addAll(propertiesSeries);
-        }
+        
+        // add series
 
         plot.series = series;
         plot.addBuild(build, listener.getLogger(), workspace);

@@ -5,17 +5,19 @@
  */
 package hudson.plugins.plot;
 
+import java.io.PrintStream;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.kohsuke.stapler.StaplerRequest;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
-import java.io.PrintStream;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.sf.json.JSONObject;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Represents a plot data series configuration.
@@ -40,15 +42,8 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
     @SuppressWarnings("visibilitymodifier")
     protected String label;
 
-    /**
-     * Data series type. Mandatory. This can be csv, xml, or properties file.
-     * This should be an enum, but I am not sure how to support that with
-     * stapler at the moment
-     */
-    @SuppressWarnings("visibilitymodifier")
-    protected String fileType;
 
-    protected Series(String file, String label, String fileType) {
+    protected Series(String file, String label) {
         this.file = file;
 
         if (label == null) {
@@ -56,7 +51,6 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
         }
 
         this.label = label;
-        this.fileType = fileType;
     }
 
     public String getFile() {
@@ -65,10 +59,6 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
 
     public String getLabel() {
         return label;
-    }
-
-    public String getFileType() {
-        return fileType;
     }
 
     /**
@@ -82,10 +72,6 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
     public abstract List<PlotPoint> loadSeries(FilePath workspaceRootDir,
                                                int buildNumber, PrintStream logger);
 
-    // Convert data from before version 1.3
-    private Object readResolve() {
-        return (fileType == null) ? new PropertiesSeries(file, label) : this;
-    }
 
     /**
      * Return the url that should be used for this point.

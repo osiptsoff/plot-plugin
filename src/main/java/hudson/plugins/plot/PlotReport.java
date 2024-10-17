@@ -4,25 +4,27 @@
  */
 package hudson.plugins.plot;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
-import hudson.model.AbstractProject;
-import hudson.model.Job;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.NumberFormat;
 import java.nio.charset.Charset;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.collections.CollectionUtils;
+
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+
+import hudson.model.AbstractProject;
+import hudson.model.Job;
 
 /**
  * Represents a plot report for a single group of plots.
@@ -56,10 +58,6 @@ public class PlotReport {
         this.project = job;
     }
 
-    @Deprecated
-    public AbstractProject<?, ?> getProject() {
-        return project instanceof AbstractProject ? (AbstractProject<?, ?>) project : null;
-    }
 
     // called from PlotReport/index.jelly
     public Job<?, ?> getJob() {
@@ -121,14 +119,7 @@ public class PlotReport {
         }
     }
 
-    // called from PlotReport/index.jelly
     public boolean getDisplayTableFlag(int i) {
-        Plot plot = getPlot(i);
-
-        if (CollectionUtils.isNotEmpty(plot.getSeries())) {
-            Series series = plot.getSeries().get(0);
-            return (series instanceof CSVSeries) && ((CSVSeries) series).getDisplayTableFlag();
-        }
         return false;
     }
 
@@ -143,10 +134,9 @@ public class PlotReport {
         if (!plotFile.exists()) {
             return tableData;
         }
-        CSVReader reader = null;
-        try {
-            reader = new CSVReader(new InputStreamReader(new FileInputStream(plotFile),
-                    Charset.defaultCharset().name()));
+
+        try (final CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(plotFile),
+                Charset.defaultCharset().name()))) {
             // throw away 2 header lines
             reader.readNext();
             reader.readNext();
@@ -203,15 +193,8 @@ public class PlotReport {
             }
         } catch (CsvValidationException | IOException ioe) {
             LOGGER.log(Level.SEVERE, "Exception reading csv file", ioe);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    LOGGER.log(Level.INFO, "Failed to close CSV reader", e);
-                }
-            }
         }
+
         return tableData;
     }
 

@@ -5,16 +5,16 @@
 
 package hudson.plugins.plot;
 
-import hudson.FilePath;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import hudson.FilePath;
 
 /**
  * Stub to hold common series test functionality.
@@ -33,7 +33,6 @@ public class SeriesTestCase {
 
         assertEquals("File name is not configured correctly", file, series.file);
         assertEquals("Label is not configured correctly", label, series.label);
-        assertEquals("Type is not configured correctly", type, series.fileType);
     }
 
     public void testPlotPoints(List<PlotPoint> points, int expected) {

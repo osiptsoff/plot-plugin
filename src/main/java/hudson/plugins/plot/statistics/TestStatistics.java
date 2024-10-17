@@ -1,5 +1,10 @@
 package hudson.plugins.plot.statistics;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import hudson.plugins.plot.PlotPoint;
+
 /**
  * Represents the general statistics of tests.
  * 
@@ -48,5 +53,22 @@ public class TestStatistics {
      */
     public Integer getFailed() {
         return this.failed;
+    }
+    
+    /**
+     * Converts test statistics to list of plot points, one
+     * point per test state.
+     * 
+     * @return list of four (passed, skipped, errors, failed) plot points
+     */
+    public List<PlotPoint> toPlotPoints() {
+        final ArrayList<PlotPoint> result = new ArrayList<>(4);
+
+        result.add(new PlotPoint(passed.toString(), null, "passed"));
+        result.add(new PlotPoint(skipped.toString(), null, "skipped"));
+        result.add(new PlotPoint(errors.toString(), null, "errors"));
+        result.add(new PlotPoint(failed.toString(), null, "failed"));
+
+        return result;
     }
 }
