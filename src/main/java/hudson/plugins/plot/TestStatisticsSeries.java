@@ -1,7 +1,7 @@
 package hudson.plugins.plot;
 
 import java.io.PrintStream;
-import java.nio.file.Path;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +16,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.FilePath;
+import hudson.model.Computer;
 import hudson.model.Descriptor;
 import hudson.plugins.plot.statistics.TestStatistics;
 import hudson.plugins.plot.statistics.TestStatisticsAccumulator;
@@ -31,10 +32,8 @@ import net.sf.json.JSONObject;
  */
 public class TestStatisticsSeries extends Series {
     private static final Logger LOGGER = LogManager.getLogger(TestStatisticsSeries.class);
-    private static final String URL = "test-statistics";
 
-    private final TestStatisticsParserChain parserChain = new TestStatisticsParserChain()
-        .add(new SurefireTxtReportParser());
+    private TestStatisticsParserChain parserChain;
 
     @DataBoundConstructor
     public TestStatisticsSeries(String... filenamePatterns) {
@@ -45,15 +44,17 @@ public class TestStatisticsSeries extends Series {
     public List<PlotPoint> loadSeries(FilePath workspaceRootDir,
             int buildNumber, PrintStream logger) {
         final FileFinder fileFinder = new FileFinder(workspaceRootDir);
+        final FilePath[] matchingPaths = fileFinder.findFiles(filenamePatterns);
 
-        final Path[] matchingPaths = fileFinder.findFiles(filenamePatterns);
+        final Computer computer = workspaceRootDir.toComputer();
+        parserChain = getChain(computer == null ? null : computer.getDefaultCharset());
 
         if (matchingPaths.length == 0) {
             logNoFilesFound(fileFinder.getBaseDir());
             return Collections.emptyList();
         }
 
-        final List<PlotPoint> points =  Arrays.asList(matchingPaths).stream()
+        return Arrays.asList(matchingPaths).stream()
             .map(this::parseAndLogFail)
             .filter(Objects::nonNull)
             .collect(
@@ -61,28 +62,19 @@ public class TestStatisticsSeries extends Series {
                 TestStatisticsAccumulator::add,
                 (firstAcc, secondAcc) -> firstAcc.add(secondAcc.getResult())
             ).getResult().toPlotPoints();
-
-        // the only purpose here is to assing url
-        for (int i = 0; i < points.size(); i++) {
-            final PlotPoint plotPoint = points.get(i);
-
-            plotPoint.setUrl(getUrl(URL, plotPoint.getLabel(), i, buildNumber));
-        }
-
-        return points;
     }
 
-    private TestStatistics parseAndLogFail(Path path) {
+    private TestStatistics parseAndLogFail(FilePath path) {
         final TestStatistics statistics = parserChain.parse(path);
 
         if (statistics == null) {
-            LOGGER.warn(String.format("Failed to parse file '%s'", path.toString()));
+            LOGGER.warn(String.format("Failed to parse file '%s'", path.getRemote()));
         }
 
         return statistics;
     }
 
-    private void logNoFilesFound(Path searchBaseDir) {
+    private void logNoFilesFound(FilePath searchBaseDir) {
         final String errorMessage =
             "For patterns [%s] no matching files were found in fs tree with root '%s'.";
 
@@ -91,7 +83,15 @@ public class TestStatisticsSeries extends Series {
             joiner.add(String.format("'%s'", pattern));
         }
 
-        LOGGER.warn(String.format(errorMessage, joiner.toString(), searchBaseDir.toString()));
+        LOGGER.warn(String.format(errorMessage, joiner.toString(), searchBaseDir.getRemote()));
+    }
+
+    private TestStatisticsParserChain getChain(Charset charset) {
+        final SurefireTxtReportParser txtParser = new SurefireTxtReportParser();
+        txtParser.setCharset(charset);
+
+        return new TestStatisticsParserChain()
+            .add(txtParser);
     }
 
     @Override

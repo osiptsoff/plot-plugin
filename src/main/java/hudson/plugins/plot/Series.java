@@ -122,6 +122,7 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
     @Extension
     public static class DescriptorImpl extends Descriptor<Series> {
         @NonNull
+        @Override
         public String getDisplayName() {
             return Messages.Plot_Series();
         }

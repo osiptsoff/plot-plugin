@@ -1,11 +1,11 @@
 package hudson.plugins.plot.statistics.parser.chain;
 
-import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import hudson.FilePath;
 import hudson.plugins.plot.statistics.TestStatistics;
 import hudson.plugins.plot.statistics.parser.AbstractTestStatisticsParser;
 
@@ -37,7 +37,7 @@ public final class TestStatisticsParserChain {
      * @return {@link TestStatistics} if chain was able to process given file,
      * {@code null} otherwise
      */
-    public TestStatistics parse(Path path) {
+    public TestStatistics parse(FilePath path) {
         if (parsers.isEmpty()) {
             throw new IllegalStateException("Using unconfigured parser chain");
         }

@@ -1,8 +1,9 @@
 package hudson.plugins.plot.statistics.parser;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import hudson.FilePath;
 import hudson.plugins.plot.statistics.TestStatistics;
 
 /**
@@ -33,9 +35,13 @@ public class SurefireTxtReportParser extends AbstractTestStatisticsParser {
     private static final String FAILURES_MARKER = "failures";
     private static final String SKIPPED_MARKER = "skipped";
 
+    private Charset charset = Charset.defaultCharset();
+
     @Override
-    protected TestStatistics doParse(Path filePath) throws ParseException {
-        try (final Stream<String> lines = Files.lines(filePath)) {
+    protected TestStatistics doParse(FilePath filePath) throws ParseException {
+        try (final BufferedReader reader = new BufferedReader(
+                new InputStreamReader(filePath.read(), charset.name()))) {
+            final Stream<String> lines = reader.lines();
             final Optional<TestStatistics> statistics = lines
                 .map(this::parseFromLine)
                 .filter(Objects::nonNull)
@@ -51,12 +57,29 @@ public class SurefireTxtReportParser extends AbstractTestStatisticsParser {
             pe.initCause(ioe);
 
             throw pe;
+        } catch (InterruptedException ie) {
+            final ParseException pe = new ParseException("Interrupted reading a file", 0);
+            pe.initCause(ie);
+            Thread.currentThread().interrupt();
+
+            throw pe;
         }
     }
 
     @Override
     protected String getPattern() {
         return "**/surefire-reports/*.txt";
+    }
+
+    /**
+     * Specifies charset used for decoding read files.
+     *
+     * @param charset new charset
+     */
+    public void setCharset(Charset charset) {
+        if (charset != null) {
+            this.charset = charset;
+        }
     }
 
     private TestStatistics parseFromLine(String line) {
@@ -73,7 +96,7 @@ public class SurefireTxtReportParser extends AbstractTestStatisticsParser {
                 return null;
             }
 
-            final String parsableNumber = matcher.group(1).split(":\\s*")[1];
+            final String parsableNumber = matcher.group().split(":\\s*")[1];
             statisticsMap.put(marker, Integer.parseInt(parsableNumber));
         }
 
