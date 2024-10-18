@@ -11,12 +11,17 @@ import java.util.StringJoiner;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.StaplerRequest;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import hudson.Extension;
 import hudson.FilePath;
+import hudson.model.Descriptor;
 import hudson.plugins.plot.statistics.TestStatistics;
 import hudson.plugins.plot.statistics.TestStatisticsAccumulator;
 import hudson.plugins.plot.statistics.parser.SurefireTxtReportParser;
 import hudson.plugins.plot.statistics.parser.chain.TestStatisticsParserChain;
+import net.sf.json.JSONObject;
 
 /**
  * Used for loading and combining all test statistics
@@ -45,7 +50,6 @@ public class TestStatisticsSeries extends Series {
 
         if (matchingPaths.length == 0) {
             logNoFilesFound(fileFinder.getBaseDir());
-
             return Collections.emptyList();
         }
 
@@ -88,5 +92,25 @@ public class TestStatisticsSeries extends Series {
         }
 
         LOGGER.warn(String.format(errorMessage, joiner.toString(), searchBaseDir.toString()));
+    }
+
+    @Override
+    public Descriptor<Series> getDescriptor() {
+        return new DescriptorImpl();
+    }
+
+    @Extension
+    public static class DescriptorImpl extends Descriptor<Series> {
+        @NonNull
+        @Override
+        public String getDisplayName() {
+            return Messages.Plot_TestStatisticsSeries();
+        }
+
+        @Override
+        public Series newInstance(StaplerRequest req, @NonNull JSONObject formData)
+                throws FormException {
+            return SeriesTransformUtil.createSeries(formData, req);
+        }
     }
 }

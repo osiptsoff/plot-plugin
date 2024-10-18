@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import org.apache.log4j.Logger;
+
 import hudson.FilePath;
 
 /**
@@ -17,6 +19,8 @@ import hudson.FilePath;
  * @author Nikita Osiptsov
  */
 public class FileFinder {
+    private static final Logger LOGGER = Logger.getLogger(FileFinder.class.getName());
+
     private final Path baseDir;
 
     /**
@@ -61,6 +65,8 @@ public class FileFinder {
                 .toArray(Path[]::new);
 
         } catch (IOException ioe) {
+            LOGGER.error(String.format("Failed to traverse fs tree with root '%s'.", baseDir),
+                ioe);
             return new Path[0];
         }
     }

@@ -3,6 +3,7 @@ package hudson.plugins.plot;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.jenkinsci.Symbol;
@@ -23,6 +24,7 @@ import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
+import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 
@@ -59,15 +61,14 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
     private boolean keepRecords;
     private String csvFileName;
 
-    private Series series;
+    private TestStatisticsSeries series;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     // Similarly, any optional @DataBoundSetter properties must match
     @DataBoundConstructor
-    public PlotBuilder(String group, String style, String csvFileName) {
+    public PlotBuilder(String group, String style) {
         this.group = group;
         this.style = style;
-        this.csvFileName = csvFileName;
     }
 
     public String getGroup() {
@@ -100,6 +101,15 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
 
     public boolean getUseDescr() {
         return useDescr;
+    }
+
+    public String getCsvFileName() {
+        return this.csvFileName;
+    }
+
+    @DataBoundSetter
+    public void setCsvFileName(String csvFileName) {
+        this.csvFileName = csvFileName;
     }
 
     @DataBoundSetter
@@ -164,29 +174,26 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
         this.description = Util.fixEmptyAndTrim(description);
     }
 
-    public Series getSeries() {
+    public TestStatisticsSeries getSeries() {
         return this.series;
     }
 
     @DataBoundSetter
-    public void setSeries(Series series) {
-        this.series = series;
+    public void setSeries(TestStatisticsSeries series) {
+        this.series = Objects.requireNonNull(series);
     }
 
     @Override
     public void perform(@NonNull Run<?, ?> build, @NonNull FilePath workspace,
                         @NonNull Launcher launcher, @NonNull TaskListener listener) {
         List<Plot> plots = new ArrayList<>();
-        // TODO: name of platform as title
-        Plot plot = new Plot("stubber", yaxis, group, numBuilds, csvFileName, style,
+
+        String title = Jenkins.get().getDisplayName();
+        Plot plot = new Plot(title, yaxis, group, numBuilds, csvFileName, style,
                 useDescr, keepRecords, exclZero, logarithmic,
                 yaxisMinimum, yaxisMaximum, description);
 
-        if (this.series == null) {
-            plot.series = Collections.emptyList();
-        } else {
-            plot.series = Collections.singletonList(series);
-        }
+        plot.series = Collections.singletonList(series);
 
         plot.addBuild(build, listener.getLogger(), workspace);
         plots.add(plot);
