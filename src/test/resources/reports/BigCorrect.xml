@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="foo.bar.test" time="0.238" tests="6" errors="1" skipped="1" failures="1">
+  <properties>
+    <property name="aaa" value="bbb"/>
+    <property name="bbb" value="bbb"/>
+    <property name="ccc" value="bbb"/>
+    <property name="ddd" value="bbb"/>
+    <property name="eee" value="bbb"/>
+  </properties>
+  <testcase name="a" classname="foo.bar" time="0.199"/>
+  <testcase name="b" classname="bar.foo" time="0.001"/>
+  <testcase name="c" classname="baz.foo" time="0.008"/>
+  <testcase name="d" classname="foo.baz" time="0.022"/>
+</testsuite>

@@ -19,6 +19,7 @@ public class XmlTestReportParserTest {
         "reports/Correct.xml",
         "reports/NoParameters.xml",
         "reports/Wrong.txt",
+        "reports/BigCorrect.xml"
     };
 
     private final XmlTestReportParser parser = new XmlTestReportParser();
@@ -47,6 +48,18 @@ public class XmlTestReportParserTest {
         final FilePath path = getPath(FILES[2]);
 
         Assert.assertThrows(ParseException.class, () -> parser.doParse(path));
+    }
+
+    @Test
+    public void parseBigCorrect() throws ParseException {
+        final FilePath path = getPath(FILES[3]);
+
+        final TestStatistics actualStatistics = parser.doParse(path);
+
+        Assert.assertEquals(3, actualStatistics.getPassed().intValue());
+        Assert.assertEquals(1, actualStatistics.getSkipped().intValue());
+        Assert.assertEquals(1, actualStatistics.getFailed().intValue());
+        Assert.assertEquals(1, actualStatistics.getErrors().intValue());
     }
 
     private FilePath getPath(String name) {

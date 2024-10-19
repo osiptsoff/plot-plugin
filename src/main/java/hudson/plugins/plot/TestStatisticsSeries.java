@@ -33,8 +33,7 @@ import net.sf.json.JSONObject;
  */
 public class TestStatisticsSeries extends Series {
     private static final Logger LOGGER = LogManager.getLogger(TestStatisticsSeries.class);
-
-    private TestStatisticsParserChain parserChain;
+    private transient TestStatisticsParserChain parserChain;
 
     @DataBoundConstructor
     public TestStatisticsSeries(String... filenamePatterns) {

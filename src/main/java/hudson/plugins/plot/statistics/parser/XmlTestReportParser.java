@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -66,7 +67,7 @@ public class XmlTestReportParser extends AbstractTestStatisticsParser {
             int event;
             do {
                 event = xmlReader.next();
-            } while (event != XMLStreamReader.START_ELEMENT);
+            } while (!isNeededTag(xmlReader, event));
 
             final TestStatistics statistics = parseFromTag(xmlReader);
 
@@ -97,6 +98,11 @@ public class XmlTestReportParser extends AbstractTestStatisticsParser {
     @Override
     protected final String getPattern() {
         return "/**/*report*/**/*.xml";
+    }
+
+    private boolean isNeededTag(XMLStreamReader reader, int event) {
+        return event == XMLStreamConstants.START_ELEMENT
+            && !"xml".equals(reader.getLocalName());
     }
 
     private TestStatistics parseFromTag(XMLStreamReader reader) {
