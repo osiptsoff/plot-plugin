@@ -21,6 +21,7 @@ import hudson.model.Descriptor;
 import hudson.plugins.plot.statistics.TestStatistics;
 import hudson.plugins.plot.statistics.TestStatisticsAccumulator;
 import hudson.plugins.plot.statistics.parser.SurefireTxtReportParser;
+import hudson.plugins.plot.statistics.parser.XmlTestReportParser;
 import hudson.plugins.plot.statistics.parser.chain.TestStatisticsParserChain;
 import net.sf.json.JSONObject;
 
@@ -87,11 +88,9 @@ public class TestStatisticsSeries extends Series {
     }
 
     private TestStatisticsParserChain getChain(Charset charset) {
-        final SurefireTxtReportParser txtParser = new SurefireTxtReportParser();
-        txtParser.setCharset(charset);
-
         return new TestStatisticsParserChain()
-            .add(txtParser);
+            .add(new XmlTestReportParser(charset))
+            .add(new SurefireTxtReportParser(charset));
     }
 
     @Override

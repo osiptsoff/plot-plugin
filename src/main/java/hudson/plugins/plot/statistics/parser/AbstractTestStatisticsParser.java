@@ -1,5 +1,6 @@
 package hudson.plugins.plot.statistics.parser;
 
+import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,6 +15,15 @@ import hudson.plugins.plot.statistics.TestStatistics;
  * @author Nikita Osiptsov
  */
 public abstract class AbstractTestStatisticsParser {
+    private Charset charset = Charset.defaultCharset();
+
+    protected AbstractTestStatisticsParser() {
+    }
+
+    protected AbstractTestStatisticsParser(Charset charset) {
+        this.charset = charset;
+    }
+
     /**
      * Parses test statistics from given file.
      *
@@ -44,6 +54,27 @@ public abstract class AbstractTestStatisticsParser {
             .getPathMatcher(pattern)
             .matches(remotePath);
     }
+
+    /**
+     * Specifies charset used for decoding files.
+     * Defaults to server's default charset.
+     * If given charset is {@code null}, no changes applied.
+     *
+     * @param charset new charset
+     */
+    public void setCharset(Charset charset) {
+        if (charset != null) {
+            this.charset = charset;
+        }
+    }
+
+    /**
+     * @return parser's charset
+     */
+    public Charset getCharset() {
+        return this.charset;
+    }
+
     /**
      * Parses statistics from given file.
      *

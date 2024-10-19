@@ -20,7 +20,7 @@ public final class TestStatisticsParserChain {
     /**
      * Adds new parser to the end of chain.
      *
-     * @param parser new parser
+     * @param parser new parser, must not be {@code null}
      * @return this instance for chaining
      */
     public TestStatisticsParserChain add(AbstractTestStatisticsParser parser) {
