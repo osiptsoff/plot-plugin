@@ -72,7 +72,9 @@ public class XmlTestReportParser extends AbstractTestStatisticsParser {
             final TestStatistics statistics = parseFromTag(xmlReader);
 
             if (statistics == null) {
-                throw new ParseException("Outer tag has no valid statistics attributes.", 0);
+                throw new ParseException(
+                    "Outer tag lacks at least one valid statistics attribute.", 0
+                );
             }
 
             return statistics;
@@ -97,12 +99,12 @@ public class XmlTestReportParser extends AbstractTestStatisticsParser {
 
     @Override
     protected final String getPattern() {
-        return "/**/*report*/**/*.xml";
+        return "/**/*.xml";
     }
 
     private boolean isNeededTag(XMLStreamReader reader, int event) {
         return event == XMLStreamConstants.START_ELEMENT
-            && !"xml".equals(reader.getLocalName());
+            && "testsuite".equalsIgnoreCase(reader.getLocalName());
     }
 
     private TestStatistics parseFromTag(XMLStreamReader reader) {
@@ -152,7 +154,7 @@ public class XmlTestReportParser extends AbstractTestStatisticsParser {
     }
 
     private boolean isAttributeNeeded(String attributeName) {
-        List<String> neededAttributes = Arrays.asList(PASSED_MARKER,
+        final List<String> neededAttributes = Arrays.asList(PASSED_MARKER,
                 ERRORS_MARKER, FAILURES_MARKER, SKIPPED_MARKER);
 
         return neededAttributes.contains(attributeName);

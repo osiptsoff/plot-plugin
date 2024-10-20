@@ -36,7 +36,7 @@ public class FileFinder {
     }
 
     /**
-     * Searches local base directory for all files matching any of
+     * Searches base directory for all files with names matching any of
      * given patterns. Note: patterns are expected to use {@code glob} path syntax.
      *
      * @param filenamePatterns path patterns
