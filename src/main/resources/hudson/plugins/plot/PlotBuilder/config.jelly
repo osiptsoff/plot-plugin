@@ -15,10 +15,6 @@
                 <f:textbox name="group" value="${plot.group}" clazz="required"/>
             </f:entry>
 
-            <f:entry title="${%Plot title}" field="title" help="/plugin/plot/help-title.html">
-                <f:textbox name="title" value="${plot.title}"/>
-            </f:entry>
-
             <f:entry title="${%Plot description}" help="/plugin/plot/help-description.html">
               <f:textbox name="description" value="${plot.description}" />
             </f:entry>
@@ -69,16 +65,9 @@
             <f:entry title="${%Y-axis maximum}" field="yaxisMaximum" help="/plugin/plot/help-yaxisMaximum.html">
                 <f:textbox name="yaxisMaximum" value="${plot.yaxisMaximum}"/>
             </f:entry>
-            <f:entry title="" description="${%A new data series definition}">
-                <f:repeatableProperty field="csvSeries" add="Add CSV series"/>
+            <f:entry title="" description="${%A new data series definition}" help="/plugin/plot/help-yaxisMaximum.html">
+                <f:property field="series"/>
             </f:entry>
-            <f:entry title="" description="${%A new data series definition}">
-                <f:repeatableProperty field="propertiesSeries" add="Add properties series"/>
-            </f:entry>
-            <f:entry title="" description="${%A new data series definition}">
-                <f:repeatableProperty field="xmlSeries" add="Add XML series"/>
-            </f:entry>
-
         </p:blockWrapper>
 
     </f:entry>

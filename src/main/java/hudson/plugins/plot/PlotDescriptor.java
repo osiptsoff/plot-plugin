@@ -1,5 +1,11 @@
 package hudson.plugins.plot;
 
+import java.io.IOException;
+
+import org.kohsuke.stapler.AncestorInPath;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.FilePath;
@@ -8,11 +14,7 @@ import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.util.FormValidation;
-import java.io.IOException;
 import net.sf.json.JSONObject;
-import org.kohsuke.stapler.AncestorInPath;
-import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * The Descriptor for the plot configuration Extension
@@ -45,7 +47,7 @@ public class PlotDescriptor extends BuildStepDescriptor<Publisher> {
     public Publisher newInstance(StaplerRequest req, JSONObject formData)
             throws FormException {
         PlotPublisher publisher = new PlotPublisher();
-        for (Object data : SeriesFactory.getArray(formData.get("plots"))) {
+        for (Object data : SeriesTransformUtil.getArray(formData.get("plots"))) {
             publisher.addPlot(bindPlot((JSONObject) data, req));
         }
         return publisher;
@@ -53,7 +55,7 @@ public class PlotDescriptor extends BuildStepDescriptor<Publisher> {
 
     private static Plot bindPlot(JSONObject data, StaplerRequest req) {
         Plot p = req.bindJSON(Plot.class, data);
-        p.series = SeriesFactory.createSeriesList(data.get("series"), req);
+        p.series = SeriesTransformUtil.createSeriesList(data.get("series"), req);
         return p;
     }
 

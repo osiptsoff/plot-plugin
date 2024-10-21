@@ -1,0 +1,18 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:p="/lib/plot">
+    <f:entry>
+       <p:blockWrapperBackground>
+            <f:entry title="${%Series filename patterns}">
+                <f:repeatable items="${series.filenamePatterns}" minimum="1">
+                    <f:textbox/>
+                </f:repeatable>
+            </f:entry>
+
+            <f:entry>
+                <div align="right">
+                    <f:repeatableDeleteButton value="${%Delete Data Series}"/>
+                </div>
+            </f:entry>
+        </p:blockWrapperBackground>
+    </f:entry>
+</j:jelly>

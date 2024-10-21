@@ -1,0 +1,8 @@
+<testsuite name="foo.barTest" timestamp="2024-06-04T14:46:14">
+    <a>aaa</a>
+    <b>bbb</b>
+    <c>
+        <d>ddd</d>
+        <d>ddd</d>
+    </c>
+</testsuite>

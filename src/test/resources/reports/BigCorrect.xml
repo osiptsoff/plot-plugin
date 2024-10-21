@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd"
+    name="ru.spb.nicetu.pkbz.util.StringUtilTest" time="0.05" tests="6" errors="1" skipped="1" failures="1"
+  >
+  <properties>
+    <property name="sun.desktop" value="b"/>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="sun.cpu.isalist" value=""/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="aaa"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="user.timezone" value="1"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="os.name" value="w"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="bbb"/>
+    <property name="sun.java.command" value="ccc"/>
+    <property name="surefire.test.class.path" value="ddd"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="h"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.home" value="aaa"/>
+    <property name="basedir" value="bbb"/>
+    <property name="file.separator" value="/"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="surefire.real.class.path" value="t"/>
+    <property name="sun.boot.class.path" value="w"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="1.8.0_43-b03"/>
+    <property name="user.name" value="c"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.8.0-45-generic"/>
+    <property name="java.endorsed.dirs" value="c"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="localRepository" value="a"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="1.8.0_43"/>
+    <property name="user.dir" value="a"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.library.path" value="a"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="25.40-b25"/>
+    <property name="java.specification.maintenance.version" value="5"/>
+    <property name="java.ext.dirs" value="a"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="52.0"/>
+  </properties>
+  <testcase name="f" classname="a" time="0.02"/>
+  <testcase name="f" classname="a" time="0.002"/>
+  <testcase name="e" classname="b" time="0.01"/>
+  <testcase name="e" classname="b" time="0.001"/>
+  <testcase name="d" classname="c" time="0"/>
+  <testcase name="d" classname="c" time="0.001"/>
+  <testcase name="c" classname="d" time="0"/>
+  <testcase name="c" classname="d" time="0.002"/>
+  <testcase name="b" classname="e" time="0.001"/>
+  <testcase name="b" classname="e" time="0.003"/>
+  <testcase name="a" classname="f" time="0.002"/>
+  <testcase name="a" classname="f" time="0.002"/>
+</testsuite>

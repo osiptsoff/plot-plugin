@@ -5,17 +5,19 @@
  */
 package hudson.plugins.plot;
 
+import java.io.PrintStream;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.kohsuke.stapler.StaplerRequest;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
-import java.io.PrintStream;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.sf.json.JSONObject;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Represents a plot data series configuration.
@@ -24,51 +26,30 @@ import org.kohsuke.stapler.StaplerRequest;
  * @author Allen Reese
  */
 public abstract class Series extends AbstractDescribableImpl<Series> {
-    private static final transient Pattern PAT_NAME = Pattern.compile("%name%");
-    private static final transient Pattern PAT_INDEX = Pattern.compile("%index%");
+    private static final Pattern PAT_NAME = Pattern.compile("%name%");
+    private static final Pattern PAT_INDEX = Pattern.compile("%index%");
     private static final Pattern PAT_BUILD_NUMBER = Pattern.compile("%build%");
-
-    /**
-     * Relative path to the data series property file. Mandatory.
-     */
-    @SuppressWarnings("visibilitymodifier")
-    protected String file;
 
     /**
      * Data series legend label. Optional.
      */
     @SuppressWarnings("visibilitymodifier")
     protected String label;
-
-    /**
-     * Data series type. Mandatory. This can be csv, xml, or properties file.
-     * This should be an enum, but I am not sure how to support that with
-     * stapler at the moment
-     */
     @SuppressWarnings("visibilitymodifier")
-    protected String fileType;
+    protected String[] filenamePatterns;
 
-    protected Series(String file, String label, String fileType) {
-        this.file = file;
+    protected Series(String label, String... filenamePatterns) {
+        this.filenamePatterns = filenamePatterns;
 
         if (label == null) {
             label = Messages.Plot_Missing();
         }
 
         this.label = label;
-        this.fileType = fileType;
-    }
-
-    public String getFile() {
-        return file;
     }
 
     public String getLabel() {
         return label;
-    }
-
-    public String getFileType() {
-        return fileType;
     }
 
     /**
@@ -82,10 +63,6 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
     public abstract List<PlotPoint> loadSeries(FilePath workspaceRootDir,
                                                int buildNumber, PrintStream logger);
 
-    // Convert data from before version 1.3
-    private Object readResolve() {
-        return (fileType == null) ? new PropertiesSeries(file, label) : this;
-    }
 
     /**
      * Return the url that should be used for this point.
@@ -133,6 +110,10 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
         return resultUrl;
     }
 
+    public String[] getFilenamePatterns() {
+        return this.filenamePatterns;
+    }
+
     @Override
     public Descriptor<Series> getDescriptor() {
         return new DescriptorImpl();
@@ -141,6 +122,7 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
     @Extension
     public static class DescriptorImpl extends Descriptor<Series> {
         @NonNull
+        @Override
         public String getDisplayName() {
             return Messages.Plot_Series();
         }
@@ -148,7 +130,7 @@ public abstract class Series extends AbstractDescribableImpl<Series> {
         @Override
         public Series newInstance(StaplerRequest req, @NonNull JSONObject formData)
                 throws FormException {
-            return SeriesFactory.createSeries(formData, req);
+            return SeriesTransformUtil.createSeries(formData, req);
         }
     }
 }

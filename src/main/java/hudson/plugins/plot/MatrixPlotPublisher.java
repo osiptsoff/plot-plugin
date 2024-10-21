@@ -1,5 +1,17 @@
 package hudson.plugins.plot;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.ObjectUtils;
+import org.kohsuke.stapler.AncestorInPath;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.FilePath;
@@ -14,17 +26,7 @@ import hudson.model.BuildListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.util.FormValidation;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.ObjectUtils;
-import org.kohsuke.stapler.AncestorInPath;
-import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * @author lucinka
@@ -222,7 +224,7 @@ public class MatrixPlotPublisher extends AbstractPlotPublisher {
                 throws FormException {
             MatrixPlotPublisher publisher = new MatrixPlotPublisher();
             List<Plot> plots = new ArrayList<Plot>();
-            for (Object data : SeriesFactory.getArray(formData.get("plots"))) {
+            for (Object data : SeriesTransformUtil.getArray(formData.get("plots"))) {
                 plots.add(bindPlot((JSONObject) data, req));
             }
             publisher.setPlots(plots);
@@ -231,7 +233,7 @@ public class MatrixPlotPublisher extends AbstractPlotPublisher {
 
         private static Plot bindPlot(JSONObject data, StaplerRequest req) {
             Plot p = req.bindJSON(Plot.class, data);
-            p.series = SeriesFactory.createSeriesList(data.get("series"), req);
+            p.series = SeriesTransformUtil.createSeriesList(data.get("series"), req);
             return p;
         }
 
